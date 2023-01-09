@@ -1,29 +1,32 @@
-import {useMemo} from "react";
+import {useMemo, useState} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {Link as RouterLink} from 'react-router-dom';
 
-import {Button, Grid, Link, TextField, Typography} from "@mui/material";
+import {Alert, Button, Grid, Link, TextField, Typography} from "@mui/material";
 import {Google} from "@mui/icons-material";
 
-import {checkingAuthentication, startGoogleSignIn} from "../../store/auth";
+import {startGoogleSignIn, startLoginUserLocally} from "../../store/auth";
 import {AuthLayout} from "../layout/AuthLayout";
 import {useForm} from "../../hooks";
 
 export const LoginPage = () => {
 
-    const { status } = useSelector(state => state.auth);
+    const { status, errorMessage } = useSelector(state => state.auth);
     const dispatch = useDispatch();
 
     const { email, password, onInputChange } = useForm({
-        email: 'limbermay1@gmail.com',
-        password: '123456'
+        email: '',
+        password: ''
     });
 
     const isAuthenticating = useMemo(() => status === 'checking', [status]);
+    const [ formSubmitted, setFormSubmitted ] = useState(false);
 
     const onSubmit = (event) => {
         event.preventDefault();
-        dispatch(checkingAuthentication(email, password));
+        //! No es la acción a despachar
+        setFormSubmitted(true);
+        dispatch(startLoginUserLocally({email, password}));
     }
 
     const onGoogleSignIn = () => {
@@ -61,6 +64,15 @@ export const LoginPage = () => {
                     </Grid>
 
                     <Grid container spacing={2} sx={{mb: 2, mt: 1}}>
+
+                        <Grid
+                            item
+                            xs={12}
+                            display={ !!errorMessage && formSubmitted ? '' : 'none' }
+                        >
+                            <Alert severity='error'>{ errorMessage }</Alert>
+                        </Grid>
+
                         <Grid item xs={12} sm={6}>
                             <Button
                                 type='submit'

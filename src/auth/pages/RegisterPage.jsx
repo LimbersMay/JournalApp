@@ -5,7 +5,7 @@ import {Alert, Button, Grid, Link, TextField, Typography} from "@mui/material";
 import {AuthLayout} from "../layout/AuthLayout";
 import {Link as RouterLink} from "react-router-dom";
 import {useForm} from "../../hooks";
-import {startCreatingUserUserLocally} from "../../store/auth";
+import {startCreatingUserLocally} from "../../store/auth";
 
 const formData = {
     displayName: '',
@@ -37,7 +37,7 @@ export const RegisterPage = () => {
         setFormSubmitted(true);
 
         if (!isFormValid) return;
-        dispatch(startCreatingUserUserLocally(formState))
+        dispatch(startCreatingUserLocally(formState))
     }
 
     return (
@@ -87,14 +87,19 @@ export const RegisterPage = () => {
                         />
                     </Grid>
 
-                    <Grid container spacing={2} sx={{ mb:2, mt: 1 }}>
+                    <Grid
+                        container
+                        display={!!errorMessage && formSubmitted ? '' : 'none'}
+                    >
                         <Grid
                             item
                             xs={12}
-                            display={!!errorMessage ? '' : 'none'}
                         >
                             <Alert severity='error'>{ errorMessage }</Alert>
                         </Grid>
+                    </Grid>
+
+                    <Grid container spacing={2} sx={{ mb:2, mt: 1 }}>
                         <Grid item xs={12} >
                             <Button
                                 variant='contained'

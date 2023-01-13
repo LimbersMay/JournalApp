@@ -1,5 +1,5 @@
 import {checkingCredentials, login, logout} from "./";
-import {loginLocal, signInLocal, signInWithGoogle} from "../../firebase/providers.js";
+import {loginLocal, logoutFirebase, signInLocal, signInWithGoogle} from "../../firebase/providers.js";
 
 export const checkingAuthentication = (email, password) => {
     return async(dispatch) => {
@@ -41,5 +41,15 @@ export const startLoginUserLocally = ({ email, password }) => {
         if (!ok) return dispatch(logout({ errorMessage }));
 
         dispatch(login({uid, displayName, email, photoURL}));
+    }
+}
+
+export const startLogout = () => {
+    return async(dispatch) => {
+        dispatch(checkingCredentials());
+
+        await logoutFirebase();
+
+        dispatch(logout());
     }
 }

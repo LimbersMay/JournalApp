@@ -1,5 +1,5 @@
 import {collection, getDocs} from "firebase/firestore/lite";
-import {FirebaseDB} from "../firebase/config.js";
+import {FirebaseDB} from "../firebase/config";
 
 export const loadNotes = async(uid = '') => {
     const collectionRef = collection(FirebaseDB, `${uid}/journal/notes`);
